@@ -3,7 +3,7 @@ const { CreateSceduleModel } = require("./schedule-model");
 function CreateScheduleController(req, res) {
     let { vehicleType, vehicleColor, plateNumber, subscription, uuid, starting } = payload = req.body;
 
-    if (!vehicleType || !vehicleColor || !plateNumber || !subscription || !uuid, starting) {
+    if (!vehicleType || !vehicleColor || !plateNumber || !subscription || !uuid, !starting) {
         res.send({
             success: false,
             message: "Provide all payload",
