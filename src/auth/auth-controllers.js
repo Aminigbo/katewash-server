@@ -1,0 +1,221 @@
+const { FetchMetaData, PublicFolderModel, SignUpModel, SignInModel, updateAccessTokenModel, UpdatePssword } = require("./auth-models")
+
+
+
+//  User signup controller
+function SignUpController(req, res, next) {
+    let { name, email, country, city, password, FcnToken } = req.body;
+
+    if (!name || !email || !country || !city || !password || !FcnToken) {
+        res.send({
+            success: false,
+            message: "Provide all data",
+            data: [],
+        })
+    } else {
+        let payload = {
+            name,
+            city,
+            email,
+            password, // salt this password later
+            country,
+        }
+        SignUpModel(payload)
+            .then(response => {
+                let User = response.data;
+                if (response.error != null) {
+                    res.send({
+                        success: false,
+                        message: response.error.message,
+                        data: null,
+                    })
+                } else {
+                    let payload2 = {
+                        name,
+                        email,
+                        accessToken: User.session.access_token,
+                        refreshToken: User.session.refresh_token,
+                        FcnToken,
+                        uuid: User.user.id
+                    }
+                    PublicFolderModel(payload2)
+                        .then(response2 => {
+                            if (response2.error == null) {
+                                res.send({
+                                    success: true,
+                                    message: "Successful",
+                                    data: {
+                                        name,
+                                        city,
+                                        email,
+                                        country,
+                                        accessToken: User.session.access_token,
+                                        refreshToken: User.session.refresh_token,
+                                    },
+                                })
+                            } else {
+                                res.send({
+                                    success: false,
+                                    message: "An error occured",
+                                    data: response2,
+                                })
+                            }
+                        })
+                }
+
+            })
+    }
+
+}
+
+// Login controller
+function LoginController(req, res) {
+    let { email, password, FcnToken } = payload = req.body
+
+    if (!email || !password || !FcnToken) {
+        res.send({
+            success: false,
+            message: "Provide all login payload",
+            data: [],
+        })
+    } else {
+        SignInModel(payload)
+            .then(response => {
+                if (response.error != null) {
+                    res.send({
+                        success: false,
+                        message: response.error.message,
+                        data: null,
+                    })
+                } else {
+                    let payload2 = {
+                        token: response.data.session.access_token,
+                        refreshToken: response.data.session.refresh_token,
+                        email: response.data.user.email,
+                        FcnToken
+                    }
+                    updateAccessTokenModel(payload2)
+                        .then(response2 => {
+                            if (response2.error != null) {
+                                res.send({
+                                    success: false,
+                                    message: "An error occured",
+                                    data: response2,
+                                })
+                            } else {
+                                res.send({
+                                    success: true,
+                                    message: "Logged in successfuly",
+                                    data: {
+                                        ...response.data.user.user_metadata,
+                                        accessToken: response.data.session.access_token,
+                                        refreshToken: response.data.session.refresh_token,
+                                        uuid: response.data.user.id
+                                    },
+                                })
+                            }
+                        })
+                        .catch(error => {
+                            res.send({
+                                success: false,
+                                message: "An error occured",
+                                data: [],
+                            })
+                        })
+                }
+            })
+            .catch(error => {
+                res.send({
+                    success: false,
+                    message: "An error occured",
+                    data: [],
+                })
+            })
+    }
+
+}
+
+// request otp controller
+function RequestOtpController(req, res) {
+    let { email } = req.body
+    if (!email) {
+        res.send({
+            success: false,
+            message: "Provide all payload",
+            data: [],
+        })
+    } else {
+
+        FetchMetaData(email)
+            .then(response => {
+                if (response.error != null) {
+                    res.send({
+                        success: false,
+                        message: "An error occured",
+                        data: [],
+                    })
+                } else {
+                    if (response.data.length < 1) {
+                        res.send({
+                            success: false,
+                            message: "User do not exist",
+                            data: [],
+                        })
+                    } else {
+                        res.send({
+                            success: true,
+                            message: "OTP sent",
+                            data: {
+                                uuid: response.data[0].uuid,
+                                OTP: 11220
+                            },
+                        })
+                    }
+
+                }
+            })
+    }
+
+}
+
+
+function ResetPasswordController(req, res) {
+    let { password, uuid } = payload = req.body
+    if (!password || !uuid) {
+        res.send({
+            success: false,
+            message: "Provide all payload",
+            data: [],
+        })
+    } else {
+        UpdatePssword(payload)
+            .then(response => {
+                if (response.error != null) {
+                    res.send({
+                        success: false,
+                        message: "Invalid user ID",
+                        data: [],
+                    })
+                } else {
+                    res.send({
+                        success: true,
+                        message: "Password reset was successful",
+                        data: [],
+                    }) 
+                }
+            })
+            .catch(error => {
+
+            })
+    }
+
+}
+
+ 
+
+module.exports = {
+    SignUpController,
+    LoginController,
+    RequestOtpController,
+    ResetPasswordController, 
+}

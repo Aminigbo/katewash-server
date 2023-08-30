@@ -1,0 +1,21 @@
+{
+  "name": "katewash-server",
+  "version": "1.0.0",
+  "description": "this is the katewash app backend",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/app.js"
+  },
+  "author": "Aminigbo",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.32.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "firebase-admin": "^10.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
