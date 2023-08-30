@@ -15,6 +15,7 @@ function GetAllUserSchedulesModel(uuid) {
         .from("schedules")
         .select("*")
         .eq("user", uuid)
+        .order('id', { ascending: false })
 }
 
 
@@ -25,6 +26,7 @@ function GetSingleUserSchedulesModel(payload) {
         .select("*")
         .eq("user", payload.uuid)
         .eq("id", payload.id)
+        .order('id', { ascending: false })
 }
 
 module.exports = {
