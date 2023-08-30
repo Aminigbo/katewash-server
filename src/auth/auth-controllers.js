@@ -51,6 +51,7 @@ function SignUpController(req, res, next) {
                                         country,
                                         accessToken: User.session.access_token,
                                         refreshToken: User.session.refresh_token,
+                                        uuid: User.user.id
                                     },
                                 })
                             } else {
