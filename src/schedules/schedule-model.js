@@ -10,6 +10,25 @@ function CreateSceduleModel(payload) {
         .select()
 }
 
+function GetAllUserSchedulesModel(uuid) {
+    return supabase
+        .from("schedules")
+        .select("*")
+        .eq("user", uuid)
+}
+
+
+function GetSingleUserSchedulesModel(payload) {
+    console.log(payload)
+    return supabase
+        .from("schedules")
+        .select("*")
+        .eq("user", payload.uuid)
+        .eq("id", payload.id)
+}
+
 module.exports = {
-    CreateSceduleModel
+    CreateSceduleModel,
+    GetAllUserSchedulesModel,
+    GetSingleUserSchedulesModel
 }
