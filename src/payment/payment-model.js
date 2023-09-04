@@ -21,6 +21,7 @@ function FetchUsersTransactionHistoryService(uuid) {
         .from("payments")
         .select("*")
         .eq("user", uuid)
+        .order('id', { ascending: false })
 }
 
 module.exports = {
