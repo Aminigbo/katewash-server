@@ -5,6 +5,7 @@ function GetAllNotifictionsModel(user) {
         .from("notification")
         .select("*")
         .eq("user", user)
+        .order('id', { ascending: false })
 }
 
 function SaveNotificationModel(payload) {

@@ -1,4 +1,5 @@
 const { AddNotifictionsController } = require("../notification/notification-controllers");
+const { CurrentDate } = require("../utilities");
 const { CreateSceduleModel, GetAllUserSchedulesModel, GetSingleUserSchedulesModel, UpdateScheduleModel, GetSingleSchedulesModelyId } = require("./schedule-model");
 
 function CreateScheduleController(req, res) {
@@ -128,38 +129,43 @@ function UpdateScheduleController(req, res) {
                         data: [],
                     })
                 } else {
+                    let message = ""
                     let tracking = {}
                     if (status == "confirmed") {
+                        message = `Your wash schedule for ${response.data[0].data.vehicleType} with plate number ${response.data[0].data.plateNumber} have been confirmed.`;
                         tracking = {
                             ...response.data[0].tracking,
                             confirmed: true,
                         }
                     } else if (status == "processed") {
+                        message = `Your wash schedule for ${response.data[0].data.vehicleType} with plate number ${response.data[0].data.plateNumber} have been processed.`;
                         tracking = {
                             ...response.data[0].tracking,
                             processed: true
                         }
                     } else if (status == "completed") {
+                        message = `Your wash schedule for ${response.data[0].data.vehicleType} with plate number ${response.data[0].data.plateNumber} have been completed.`;
                         tracking = {
                             ...response.data[0].tracking,
                             completed: true,
                         }
                     } else if (status == "ready") {
+                        message = `Your wash schedule for ${response.data[0].data.vehicleType} with plate number ${response.data[0].data.plateNumber} ready.`;
                         tracking = {
                             ...response.data[0].tracking,
                             ready: true
                         }
                     }
 
-                    let payloa = {
+                    let payload = {
                         tracking,
                         status,
-                        id
+                        id,
+                        message
                     }
-                    UpdateScheduleModel(payloa)
+                    UpdateScheduleModel(payload)
                         .then(responseX => {
                             if (responseX.error != null) {
-                                console.log(responseX.error)
                                 res.send({
                                     success: false,
                                     message: "An error occured",
@@ -173,7 +179,9 @@ function UpdateScheduleController(req, res) {
                                         meta: {
                                             status,
                                             id: response.data[0].id // schedule id
-                                        }
+                                        },
+                                        message,
+                                        date: CurrentDate()
                                     }
                                 })
                                     .then(response2 => {
