@@ -1,5 +1,5 @@
 const { FetchMetaData, UpdateWalletModel } = require("../auth/auth-models");
-const { AddWalletModel } = require("./payment-model");
+const { AddWalletModel, FetchUsersTransactionHistoryService } = require("./payment-model");
 
 function AddWallet(req, res) {
     let { payref, user, amount } = payload = req.body;
@@ -12,7 +12,10 @@ function AddWallet(req, res) {
         })
     } else {
 
-        AddWalletModel(payload)
+        AddWalletModel({
+            ...payload,
+            type: "Wallet top-up"
+        })
             .then(response => {
                 if (response.error != null) {
                     res.send({
@@ -26,7 +29,7 @@ function AddWallet(req, res) {
                             if (response2.error != null) {
                                 res.send({
                                     success: false,
-                                    message: "XX=====An error occured",
+                                    message: "An error occured",
                                     data: response2,
                                 })
                             } else {
@@ -40,7 +43,7 @@ function AddWallet(req, res) {
                                         if (response3.error != null) {
                                             res.send({
                                                 success: false,
-                                                message: "X====An error occured",
+                                                message: "An error occured",
                                                 data: response3,
                                             })
                                         } else {
@@ -54,7 +57,7 @@ function AddWallet(req, res) {
                                     .catch(error => {
                                         res.send({
                                             success: false,
-                                            message: "XZ====An error occured",
+                                            message: "An error occured",
                                             data: error,
                                         })
                                     })
@@ -82,6 +85,30 @@ function AddWallet(req, res) {
     }
 }
 
+
+function GetTransactionHistory(req, res) {
+    let { uuid } = req.params;
+    FetchUsersTransactionHistoryService(uuid)
+        .then(response => {
+            if (response.error != null) {
+                res.send({
+                    success: false,
+                    message: "An error occured",
+                    data: [],
+                })
+            } else {
+                res.send({
+                    success: true,
+                    message: "Fetched",
+                    data: response.data,
+                })
+            }
+        })
+        .catch(error => {
+
+        })
+}
 module.exports = {
-    AddWallet
+    AddWallet,
+    GetTransactionHistory
 }
