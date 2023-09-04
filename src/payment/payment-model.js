@@ -16,6 +16,7 @@ function AddWalletModel(payload) {
 
 
 function FetchUsersTransactionHistoryService(uuid) {
+    console.log(uuid)
     return supabase
         .from("payments")
         .select("*")

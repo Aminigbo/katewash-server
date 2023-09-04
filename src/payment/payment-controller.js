@@ -105,7 +105,11 @@ function GetTransactionHistory(req, res) {
             }
         })
         .catch(error => {
-
+            res.send({
+                success: false,
+                message: "An error occured",
+                data: [],
+            })
         })
 }
 module.exports = {
