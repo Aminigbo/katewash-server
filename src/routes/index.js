@@ -12,6 +12,11 @@ route.use("/auth", require("../auth/auth-routes.js"))
 
 // Jobs
 route.use("/schedules", require("../schedules/schedule-route.js")) 
+
+
+
+// notification
+route.use("/notification", require("../notification/notification-routes.js")) 
  
 
 module.exports = route

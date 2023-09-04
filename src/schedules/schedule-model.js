@@ -29,8 +29,30 @@ function GetSingleUserSchedulesModel(payload) {
         .order('id', { ascending: false })
 }
 
+
+function GetSingleSchedulesModelyId(id) {
+    return supabase
+        .from("schedules")
+        .select("*")
+        .eq("id", id)
+}
+
+
+function UpdateScheduleModel(payload) {
+    return supabase
+        .from("schedules")
+        .update({
+            status: payload.status,
+            tracking: payload.tracking,
+        })
+        .eq('id', payload.id)
+        .select()
+}
+
 module.exports = {
     CreateSceduleModel,
     GetAllUserSchedulesModel,
-    GetSingleUserSchedulesModel
+    GetSingleUserSchedulesModel,
+    UpdateScheduleModel,
+    GetSingleSchedulesModelyId
 }
