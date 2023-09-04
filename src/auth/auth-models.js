@@ -46,12 +46,25 @@ function updateAccessTokenModel(payload) {
         .select()
 }
 
+
+// update User's wallet balance
+function UpdateWalletModel(payload) {
+    return supabase
+        .from("users")
+        .update({
+            wallet: payload.amount,
+        })
+        .eq('email', payload.email)
+        .select()
+}
+
+
 //  fetch user's pulic data
-function FetchMetaData(email) {
+function FetchMetaData(uuid) {
     return supabase
         .from("users")
         .select("*")
-        .eq("email", email)
+        .eq("uuid", uuid)
 }
 
 // update user's password
@@ -60,19 +73,20 @@ function UpdatePssword(payload) {
         payload.uuid,
         {
             password: payload.password,
-            user_metadata: { password:payload.password }
+            user_metadata: { password: payload.password }
         }
     )
 }
 
 
 
-module.exports = { 
+module.exports = {
     // /====================
     SignUpModel, // sign up user
     PublicFolderModel, // create user in public folder
     SignInModel, // sign in user
     updateAccessTokenModel, // update accessToken, refreshToken anf FcnToken
     FetchMetaData, // fetch users public data
-    UpdatePssword //update password
+    UpdatePssword, //update password
+    UpdateWalletModel // update user's wallet
 }
