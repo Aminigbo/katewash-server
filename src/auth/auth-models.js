@@ -79,6 +79,14 @@ function UpdatePssword(payload) {
 }
 
 
+//  fetch user's pulic data by email
+function FetchMetaDataByEmail(email) {
+    return supabase
+        .from("users")
+        .select("*")
+        .eq("email", email)
+}
+
 
 module.exports = {
     // /====================
@@ -88,5 +96,6 @@ module.exports = {
     updateAccessTokenModel, // update accessToken, refreshToken anf FcnToken
     FetchMetaData, // fetch users public data
     UpdatePssword, //update password
-    UpdateWalletModel // update user's wallet
+    UpdateWalletModel, // update user's wallet
+    FetchMetaDataByEmail, // fetch user by email
 }

@@ -1,4 +1,4 @@
-const { FetchMetaData, PublicFolderModel, SignUpModel, SignInModel, updateAccessTokenModel, UpdatePssword } = require("./auth-models")
+const { FetchMetaData, PublicFolderModel, SignUpModel, SignInModel, updateAccessTokenModel, UpdatePssword, FetchMetaDataByEmail } = require("./auth-models")
 
 
 
@@ -147,13 +147,13 @@ function RequestOtpController(req, res) {
         })
     } else {
 
-        FetchMetaData(email)
+        FetchMetaDataByEmail(email)
             .then(response => {
                 if (response.error != null) {
                     res.send({
                         success: false,
                         message: "An error occured",
-                        data: [],
+                        data: response,
                     })
                 } else {
                     if (response.data.length < 1) {
