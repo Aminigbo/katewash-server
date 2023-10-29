@@ -6,72 +6,82 @@ const { FetchMetaData, PublicFolderModel, SignUpModel, SignInModel, updateAccess
 //  User signup controller
 function SignUpController(req, res, next) {
     let uuid = req.body
-    FetchMetaData(uuid).then(response=>{
-        res.send(response)
-    })
+
     // res.send(req.body)
-    // let { name, email, country, city, password, FcnToken } = req.body;
+    let { name, email, country, city, password, FcnToken } = req.body;
 
-    // if (!name || !email || !country || !city || !password || !FcnToken) {
-    //     res.send({
-    //         success: false,
-    //         message: "Provide all data",
-    //         data: [],
-    //     })
-    // } else {
-    //     let payload = {
-    //         name,
-    //         city,
-    //         email,
-    //         password, // salt this password later
-    //         country,
-    //     }
-    //     SignUpModel(payload)
-    //         .then(response => {
-    //             let User = response.data;
-    //             if (response.error != null) {
-    //                 res.send({
-    //                     success: false,
-    //                     message: response.error.message,
-    //                     data: null,
-    //                 })
-    //             } else {
-    //                 let payload2 = {
-    //                     name,
-    //                     email,
-    //                     accessToken: User.session.access_token,
-    //                     refreshToken: User.session.refresh_token,
-    //                     FcnToken,
-    //                     uuid: User.user.id
-    //                 }
-    //                 PublicFolderModel(payload2)
-    //                     .then(response2 => {
-    //                         if (response2.error == null) {
-    //                             res.send({
-    //                                 success: true,
-    //                                 message: "Successful",
-    //                                 data: {
-    //                                     name,
-    //                                     city,
-    //                                     email,
-    //                                     country,
-    //                                     accessToken: User.session.access_token,
-    //                                     refreshToken: User.session.refresh_token,
-    //                                     uuid: User.user.id
-    //                                 },
-    //                             })
-    //                         } else {
-    //                             res.send({
-    //                                 success: false,
-    //                                 message: "An error occured",
-    //                                 data: response2,
-    //                             })
-    //                         }
-    //                     })
-    //             }
+    if (!name || !email || !country || !city || !password || !FcnToken) {
+        res.send({
+            success: false,
+            message: "Provide all data",
+            data: [],
+        })
+    } else {
+        FetchMetaData(uuid).then(response => {
+            res.send(response)
 
-    //         })
-    // }
+            if (response.data.length > 0) {
+                res.send({
+                    success: false,
+                    message: "User already exists",
+                    data: null
+                })
+            } else {
+                let payload = {
+                    name,
+                    city,
+                    email,
+                    password, // salt this password later
+                    country,
+                }
+                SignUpModel(payload)
+                    .then(response => {
+                        let User = response.data;
+                        if (response.error != null) {
+                            res.send({
+                                success: false,
+                                message: response.error.message,
+                                data: null,
+                            })
+                        } else {
+                            let payload2 = {
+                                name,
+                                email,
+                                accessToken: User.session.access_token,
+                                refreshToken: User.session.refresh_token,
+                                FcnToken,
+                                uuid: User.user.id
+                            }
+                            PublicFolderModel(payload2)
+                                .then(response2 => {
+                                    if (response2.error == null) {
+                                        res.send({
+                                            success: true,
+                                            message: "Successful",
+                                            data: {
+                                                name,
+                                                city,
+                                                email,
+                                                country,
+                                                accessToken: User.session.access_token,
+                                                refreshToken: User.session.refresh_token,
+                                                uuid: User.user.id
+                                            },
+                                        })
+                                    } else {
+                                        res.send({
+                                            success: false,
+                                            message: "An error occured",
+                                            data: response2,
+                                        })
+                                    }
+                                })
+                        }
+
+                    })
+            }
+        })
+    }
 
 }
 
