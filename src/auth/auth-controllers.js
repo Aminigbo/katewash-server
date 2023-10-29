@@ -18,7 +18,7 @@ function SignUpController(req, res, next) {
         })
     } else {
         FetchMetaData(uuid).then(response => {
-            res.send(response)
+            // res.send(response)
 
             if (response.data.length > 0) {
                 res.send({
