@@ -88,6 +88,15 @@ function FetchMetaDataByEmail(email) {
 }
 
 
+//  fetch user's pulic data by email
+function FetchAllUsers() {
+    return supabase
+        .from("users")
+        .select("*")
+    // .eq("email", email)
+}
+
+
 module.exports = {
     // /====================
     SignUpModel, // sign up user
@@ -98,4 +107,8 @@ module.exports = {
     UpdatePssword, //update password
     UpdateWalletModel, // update user's wallet
     FetchMetaDataByEmail, // fetch user by email
+
+
+    // ====
+    FetchAllUsers
 }
