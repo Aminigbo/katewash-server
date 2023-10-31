@@ -1,11 +1,12 @@
 var { supabase } = require("../../config/supabase-auth")
+const { CurrentDate } = require("../utilities")
 
 function CreateSceduleModel(payload) {
     return supabase
         .from("schedules")
         .upsert({
             user: payload.uuid,
-            data: payload,
+            data: { ...payload, startDate: CurrentDate() },
         })
         .select()
 }

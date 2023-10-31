@@ -17,6 +17,7 @@ function CreateScheduleController(req, res) {
         // check if user's wallet blance is >= subscription amount
         FetchMetaData(uuid)
             .then(response => {
+                console.log(response)
                 let Wallet = response.data[0].wallet;
                 let Email = response.data[0].email;
                 let Amount = subscription.amount;
