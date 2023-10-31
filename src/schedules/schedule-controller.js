@@ -198,6 +198,7 @@ function UpdateScheduleController(req, res) {
                                     success: false,
                                     message: "An error occured",
                                     data: [],
+                                    responseX
                                 })
                             } else {
                                 AddNotifictionsController({
