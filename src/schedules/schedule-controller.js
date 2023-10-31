@@ -1,40 +1,67 @@
+const { FetchMetaData, UpdateWalletModel, UpdateWallet } = require("../auth/auth-models");
 const { AddNotifictionsController } = require("../notification/notification-controllers");
 const { CurrentDate } = require("../utilities");
 const { CreateSceduleModel, GetAllUserSchedulesModel, GetSingleUserSchedulesModel, UpdateScheduleModel, GetSingleSchedulesModelyId } = require("./schedule-model");
 
 function CreateScheduleController(req, res) {
-    let { vehicleType, vehicleColor, plateNumber, subscription, uuid, starting } = payload = req.body;
+    let { vehicleType, vehicleColor, plateNumber, subscription, uuid } = payload = req.body;
 
-    if (!vehicleType || !vehicleColor || !plateNumber || !subscription || !uuid, !starting) {
+    if (!vehicleType || !vehicleColor || !plateNumber || !subscription || !uuid) {
         res.send({
             success: false,
             message: "Provide all payload",
             data: [],
         })
     } else {
-        CreateSceduleModel(payload)
+
+        // check if user's wallet blance is >= subscription amount
+        FetchMetaData(uuid)
             .then(response => {
-                if (response.error != null) {
+                let Wallet = response.data[0].wallet;
+                let Email = response.data[0].email;
+                let Amount = subscription.amount;
+                if (Wallet < Amount) {
                     res.send({
                         success: false,
-                        message: "An error occured",
+                        message: "Insufficient wallet balance",
                         data: [],
                     })
                 } else {
-                    res.send({
-                        success: true,
-                        message: "Schedule create",
-                        data: response.data[0],
-                    })
+                    // subtract the schedule amount from wallet
+                    let newAmount = parseInt(Wallet) - parseInt(Amount);
+                    UpdateWalletModel({ email: Email, amount: newAmount })
+                        .then(response => {
+                            UpdateWallet({ wallet: newAmount, uuid })
+                                .then(resp2 => {
+                                    CreateSceduleModel(payload)
+                                        .then(response => {
+                                            if (response.error != null) {
+                                                res.send({
+                                                    success: false,
+                                                    message: "An error occured",
+                                                    data: [],
+                                                })
+                                            } else {
+                                                res.send({
+                                                    success: true,
+                                                    message: "Schedule create",
+                                                    data: response.data[0],
+                                                })
+                                            }
+                                        })
+                                        .catch(error => {
+                                            res.send({
+                                                success: false,
+                                                message: "An error occured",
+                                                data: [],
+                                            })
+                                        })
+                                })
+                        })
                 }
+
             })
-            .catch(error => {
-                res.send({
-                    success: false,
-                    message: "An error occured",
-                    data: [],
-                })
-            })
+
     }
 }
 
