@@ -127,7 +127,8 @@ function LoginController(req, res) {
                                         ...response.data.user.user_metadata,
                                         accessToken: response.data.session.access_token,
                                         refreshToken: response.data.session.refresh_token,
-                                        uuid: response.data.user.id
+                                        uuid: response.data.user.id,
+                                        wallet
                                     },
                                 })
                             }
@@ -194,7 +195,6 @@ function RequestOtpController(req, res) {
     }
 
 }
-
 
 function ResetPasswordController(req, res) {
     let { password, uuid } = payload = req.body

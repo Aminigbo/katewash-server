@@ -20,7 +20,8 @@ function PublicFolderModel(payload) {
             accessToken: payload.accessToken,
             refreshToken: payload.refreshToken,
             FcnToken: payload.FcnToken,
-            uuid: payload.uuid
+            uuid: payload.uuid,
+            wallet:0
         })
 }
 
@@ -79,6 +80,16 @@ function UpdatePssword(payload) {
 }
 
  
+// update user's password
+function UpdateWallet(payload) {
+    return supabase.auth.admin.updateUserById(
+        payload.uuid,
+        {
+            user_metadata: { wallet: payload.wallet }
+        }
+    )
+}
+
 
 //  fetch user's pulic data by email
 function FetchMetaDataByEmail(email) {
@@ -111,5 +122,6 @@ module.exports = {
 
 
     // ====
-    FetchAllUsers
+    FetchAllUsers,
+    UpdateWallet
 }

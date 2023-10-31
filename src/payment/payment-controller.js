@@ -1,4 +1,4 @@
-const { FetchMetaData, UpdateWalletModel } = require("../auth/auth-models");
+const { FetchMetaData, UpdateWalletModel, UpdateWallet } = require("../auth/auth-models");
 const { AddWalletModel, FetchUsersTransactionHistoryService } = require("./payment-model");
 
 function AddWallet(req, res) {
@@ -35,32 +35,39 @@ function AddWallet(req, res) {
                             } else {
                                 let newAmount = parseInt(amount) + parseInt(response2.data[0].wallet);
                                 let email = response2.data[0].email
-                                UpdateWalletModel({
-                                    amount: newAmount,
-                                    email: email
-                                })
-                                    .then(response3 => {
-                                        if (response3.error != null) {
-                                            res.send({
-                                                success: false,
-                                                message: "An error occured",
-                                                data: response3,
-                                            })
-                                        } else {
-                                            res.send({
-                                                success: true,
-                                                message: "Wallet updated",
-                                                data: response3.data[0],
-                                            })
-                                        }
-                                    })
-                                    .catch(error => {
-                                        res.send({
-                                            success: false,
-                                            message: "An error occured",
-                                            data: error,
+
+                                UpdateWallet({ uuid: user, wallet: newAmount })
+                                    .then(resp => {
+
+                                        UpdateWalletModel({
+                                            amount: newAmount,
+                                            email: email
                                         })
+                                            .then(response3 => {
+                                                if (response3.error != null) {
+                                                    res.send({
+                                                        success: false,
+                                                        message: "An error occured",
+                                                        data: response3,
+                                                    })
+                                                } else {
+                                                    res.send({
+                                                        success: true,
+                                                        message: "Wallet updated",
+                                                        data: response3.data[0],
+                                                    })
+                                                }
+                                            })
+                                            .catch(error => {
+                                                res.send({
+                                                    success: false,
+                                                    message: "An error occured",
+                                                    data: error,
+                                                })
+                                            })
                                     })
+
+
                             }
 
                             // res.send(response2)
@@ -97,11 +104,16 @@ function GetTransactionHistory(req, res) {
                     data: [],
                 })
             } else {
-                res.send({
-                    success: true,
-                    message: "Fetched",
-                    data: response.data,
-                })
+                FetchMetaData(uuid)
+                    .then(resp2 => {
+
+                        res.send({
+                            success: true,
+                            message: "Fetched",
+                            data: response.data,
+                            wallet:resp2.data[0].wallet
+                        })
+                    })
             }
         })
         .catch(error => {
