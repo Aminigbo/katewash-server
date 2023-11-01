@@ -102,7 +102,7 @@ function LoginController(req, res) {
                     res.send({
                         success: false,
                         message: response.error.message,
-                        data: null,
+                        data: response,
                     })
                 } else {
                     let payload2 = {
@@ -116,7 +116,7 @@ function LoginController(req, res) {
                             if (response2.error != null) {
                                 res.send({
                                     success: false,
-                                    message: "An error occured",
+                                    message: "An error occuredXXX",
                                     data: response2,
                                 })
                             } else {
@@ -128,16 +128,17 @@ function LoginController(req, res) {
                                         accessToken: response.data.session.access_token,
                                         refreshToken: response.data.session.refresh_token,
                                         uuid: response.data.user.id,
-                                        wallet
+                                        
                                     },
                                 })
                             }
                         })
                         .catch(error => {
+                            console.log(error)
                             res.send({
                                 success: false,
-                                message: "An error occured",
-                                data: [],
+                                message: "An error occuredXX",
+                                data: error,
                             })
                         })
                 }
@@ -145,8 +146,8 @@ function LoginController(req, res) {
             .catch(error => {
                 res.send({
                     success: false,
-                    message: "An error occured",
-                    data: [],
+                    message: "An error occuredX",
+                    data: error,
                 })
             })
     }
