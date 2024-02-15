@@ -16,6 +16,7 @@ function PublicFolderModel(payload) {
         .from("users")
         .insert({
             name: payload.name,
+            phone: payload.phone,
             email: payload.email,
             accessToken: payload.accessToken,
             refreshToken: payload.refreshToken,

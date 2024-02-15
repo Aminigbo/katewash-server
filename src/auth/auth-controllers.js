@@ -8,9 +8,9 @@ function SignUpController(req, res, next) {
     let uuid = req.body
 
     // res.send(req.body)
-    let { name, email, country, city, password, FcnToken } = req.body;
+    let { name, email, country, city, password, FcnToken, phone } = req.body;
 
-    if (!name || !email || !country || !city || !password || !FcnToken) {
+    if (!name || !email || !country || !city || !password || !FcnToken, phone) {
         res.send({
             success: false,
             message: "Provide all data",
@@ -33,6 +33,7 @@ function SignUpController(req, res, next) {
                     email,
                     password, // salt this password later
                     country,
+                    phone
                 }
                 SignUpModel(payload)
                     .then(response => {
@@ -47,6 +48,7 @@ function SignUpController(req, res, next) {
                             let payload2 = {
                                 name,
                                 email,
+                                phone,
                                 accessToken: User.session.access_token,
                                 refreshToken: User.session.refresh_token,
                                 FcnToken,
@@ -60,6 +62,7 @@ function SignUpController(req, res, next) {
                                             message: "Successful",
                                             data: {
                                                 name,
+                                                phone,
                                                 city,
                                                 email,
                                                 country,
