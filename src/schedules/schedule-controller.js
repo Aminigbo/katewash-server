@@ -4,9 +4,9 @@ const { CurrentDate } = require("../utilities");
 const { CreateSceduleModel, GetAllUserSchedulesModel, GetSingleUserSchedulesModel, UpdateScheduleModel, GetSingleSchedulesModelyId } = require("./schedule-model");
 
 function CreateScheduleController(req, res) {
-    let { vehicleType, vehicleColor, plateNumber, subscription, uuid } = payload = req.body;
+    let { vehicleType, vehicleColor, plateNumber, subscription, uuid, address } = payload = req.body;
 
-    if (!vehicleType || !vehicleColor || !plateNumber || !subscription || !uuid) {
+    if (!vehicleType || !vehicleColor || !plateNumber || !subscription || !uuid || !address) {
         res.send({
             success: false,
             message: "Provide all payload",
