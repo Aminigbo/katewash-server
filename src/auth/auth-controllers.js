@@ -10,7 +10,7 @@ function SignUpController(req, res, next) {
     // res.send(req.body)
     let { name, email, country, city, password, FcnToken, phone } = req.body;
 
-    if (!name || !email || !country || !city || !password || !FcnToken, phone) {
+    if (!name || !email || !country || !city || !password || !FcnToken || !phone) {
         res.send({
             success: false,
             message: "Provide all data",
